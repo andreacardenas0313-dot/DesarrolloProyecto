@@ -98,8 +98,16 @@ public class LoginActivity extends AppCompatActivity {
                         String passwordFromDB = userSnapshot.child("password").getValue(String.class);
 
                         if (Objects.equals(passwordFromDB, userPassword)){
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
+
+                            String rol = userSnapshot.child("rol").getValue(String.class);
+
+                            if ("admin".equals(rol)) {
+                                Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
                         } else {
                             loginPassword.setError("Datos no válidos");
                             loginPassword.requestFocus();

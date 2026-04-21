@@ -48,8 +48,15 @@ public class SignupActivity extends AppCompatActivity {
                 String email = signupEmail.getText().toString().trim();
                 String username = signupUsername.getText().toString().trim();
                 String password = signupPassword.getText().toString().trim();
+                String rol;
 
-                HelperClass helperClass = new HelperClass(name, email, username, password);
+                if (username.equals("admin")) {
+                    rol = "admin";
+                } else {
+                    rol = "cliente";
+                }
+
+                HelperClass helperClass = new HelperClass(name, email, username, password, rol);
                 reference.child(username).setValue(helperClass);
                 Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);

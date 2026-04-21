@@ -4,6 +4,10 @@ public class HelperClass {
     String name;
     String email;
     String username;
+    String password;
+    String rol;
+
+
 
     public String getName() {
         return name;
@@ -36,14 +40,15 @@ public class HelperClass {
         this.password = password;
     }
 
-
-    String password;
-
-    public HelperClass(String name, String email, String username, String password) {
+    public String getrol() {
+        return rol;
+    }
+    public HelperClass(String name, String email, String username, String password, String rol) {
         this.name = name;
         this.email = email;
         this.username = username;
         this.password = password;
+        this.rol = rol;
 
     }
 
