@@ -8,11 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,9 +18,9 @@ public class SignupActivity extends AppCompatActivity {
     EditText signupName, signupEmail, signupUsername, signupPassword;
     TextView loginRedirectText;
     Button signupButton;
+
     FirebaseDatabase database;
     DatabaseReference reference;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,38 +34,42 @@ public class SignupActivity extends AppCompatActivity {
         loginRedirectText = findViewById(R.id.loginRedirectText);
         signupButton = findViewById(R.id.singup_button);
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                database = FirebaseDatabase.getInstance();
-                reference = database.getReference("usuarios");
+        signupButton.setOnClickListener(v -> {
 
-                String name = signupName.getText().toString().trim();
-                String email = signupEmail.getText().toString().trim();
-                String username = signupUsername.getText().toString().trim();
-                String password = signupPassword.getText().toString().trim();
-                String rol;
+            String name = signupName.getText().toString().trim();
+            String email = signupEmail.getText().toString().trim();
+            String username = signupUsername.getText().toString().trim();
+            String password = signupPassword.getText().toString().trim();
 
-                if (username.equals("admin")) {
-                    rol = "admin";
-                } else {
-                    rol = "cliente";
-                }
-
-                HelperClass helperClass = new HelperClass(name, email, username, password, rol);
-                reference.child(username).setValue(helperClass);
-                Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                startActivity(intent);
-
+            if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Complete todos los campos", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            String rol;
+            if (username.equals("admin")) {
+                rol = "admin";
+            } else {
+                rol = "usuario";
+            }
+
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference("usuarios");
+
+            String id = reference.push().getKey();
+
+            HelperClass helperClass = new HelperClass(name, email, username, password, rol);
+
+            reference.child(id).setValue(helperClass);
+
+            Toast.makeText(SignupActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
+
+            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+            finish();
         });
-        loginRedirectText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
+
+        loginRedirectText.setOnClickListener(v -> {
+            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
         });
     }
 }
